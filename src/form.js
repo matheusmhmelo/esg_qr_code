@@ -143,7 +143,7 @@ export default function SignIn() {
                 </Button>
                 <Grid container>
                   <Grid item>
-                    <Link href="#" variant="body2">
+                    <Link href="https://www.instagram.com/esg.unespbauru/" variant="body2">
                       Mais informações
                     </Link>
                   </Grid>
