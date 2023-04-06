@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import html2canvas from 'html2canvas';
+import { v4 as uuidv4 } from 'uuid';
 
 import QRCode from './qrCode'
 import Logo from './logo.png'
@@ -22,7 +23,7 @@ export default function Recover() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log(data)
-    setQrCode(data.get('email'))
+    setQrCode(uuidv4())
   };
 
   const downloadPng = async () => {
@@ -57,7 +58,7 @@ export default function Recover() {
               alignItems: 'center',
             }}
           >
-              <img src={Logo} alt="logo" style={{ height: '35%', width: '35%'}}/>
+              <img src={Logo} alt="logo" style={{ height: '35%', width: '35%', borderRadius: '50%'}}/>
               <Typography component="h1" variant="h5">
                 Por dentro da ESG
               </Typography>
