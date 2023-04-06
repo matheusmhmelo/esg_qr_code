@@ -8,25 +8,51 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import html2canvas from 'html2canvas';
-import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from "react-router-dom";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from '../firebase';
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 import QRCode from './qrCode'
-import Logo from './logo.png'
+import Logo from '../logo.png'
 
 const theme = createTheme();
 
 export default function Recover() {
   const printRef = React.useRef();
   const navigate = useNavigate();
+
   const [qrCode, setQrCode] = useState(null)
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log(data)
-    setQrCode(uuidv4())
+
+    getInfo(data)
   };
+
+  const getInfo = async (data) => {
+    setLoading(true)
+
+    const q = query(
+      collection(db, "cadastros"),
+      where("email", "==", data.get("email"))
+    );
+    
+    const files = await getDocs(q);
+    if (files?.docs?.length === 0) {
+      setError("E-mail não cadastrado, por favor realize o cadastro para gerar um novo QR Code!");
+      setLoading(false);
+      return;
+    }
+    
+    setQrCode(files.docs[0].get('qr_id'))
+    setLoading(false)
+  }
 
   const downloadPng = async () => {
     const element = printRef.current;
@@ -64,7 +90,9 @@ export default function Recover() {
               <Typography component="h1" variant="h5">
                 Por dentro da ESG
               </Typography>
-            {qrCode ? (
+            {loading ? (
+              <CircularProgress sx={{ mt: 10 }} />
+            ) : qrCode ? (
               <QRCode value={qrCode} />
             ) : (
               <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
@@ -73,6 +101,14 @@ export default function Recover() {
             Nulla ornare nec lacus eget tempus. Pellentesque nec quam venenatis, bibendum arcu eget, 
             tincidunt turpis. Etiam vitae ultricies risus.
             </Typography>
+
+                {error ? (
+                  <Alert severity="error">
+                    <AlertTitle>Erro</AlertTitle>
+                    {error}
+                  </Alert>
+                ) : null}
+                
                 <TextField
                   margin="normal"
                   required

@@ -8,11 +8,11 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
-import { useLocalStorage } from "./auth/useLocalStorage";
+import { useLocalStorage } from "../auth/useLocalStorage";
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 
-import Logo from './logo.png'
+import Logo from '../logo.png'
 
 const theme = createTheme();
 

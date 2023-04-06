@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {QrReader} from 'react-qr-reader';
-import Logo from './logo.png'
+import Logo from '../logo.png'
 
 const theme = createTheme();
 

@@ -14,9 +14,14 @@ import html2canvas from 'html2canvas';
 import { IMaskInput } from 'react-imask';
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from "react-router-dom";
+import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
+import { db } from '../firebase';
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 import QRCode from './qrCode'
-import Logo from './logo.png'
+import Logo from '../logo.png'
 
 const theme = createTheme();
 
@@ -63,13 +68,47 @@ export default function SignIn() {
   const [qrCode, setQrCode] = useState(null);
   const [phone, setPhone] = useState('');
   const [cpf, setCpf] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log(data)
-    setQrCode(uuidv4())
+    const qr_id = uuidv4()
+
+    storeInfo(data, qr_id)
   };
+
+  const storeInfo = async (data, qr_id) => {
+    setLoading(true)
+
+    const q = query(
+      collection(db, "cadastros"),
+      where("email", "==", data.get("email"))
+    );
+    
+    const files = await getDocs(q);
+    if (files?.docs?.length > 0) {
+      setError("E-mail já cadastrado, por favor tente novamente ou recupere seu QR Code no botão abaixo!");
+      setLoading(false);
+      return;
+    }
+    
+    try {
+      await addDoc(collection(db, "cadastros"), {
+        qr_id: qr_id,
+        name: data.get("name"),    
+        email: data.get("email"),    
+        inst_origem: data.get("inst_origem"),    
+        cpf: data.get("cpf"),    
+        phone: data.get("phone"),    
+      });
+      setQrCode(qr_id)
+    } catch (e) {
+      setError("Ocorreu um erro ao salvar seu cadastro, por favor tente novamente!")
+    }
+    setLoading(false)
+  }
 
   const downloadPng = async () => {
     const element = printRef.current;
@@ -107,7 +146,9 @@ export default function SignIn() {
               <Typography component="h1" variant="h5">
                 Por dentro da ESG
               </Typography>
-            {qrCode ? (
+            {loading ? (
+              <CircularProgress sx={{ mt: 10 }} />
+            ) : qrCode ? (
               <QRCode value={qrCode} />
             ) : (
               <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
@@ -116,6 +157,13 @@ export default function SignIn() {
                 Nulla ornare nec lacus eget tempus. Pellentesque nec quam venenatis, bibendum arcu eget, 
                 tincidunt turpis. Etiam vitae ultricies risus.
                 </Typography>
+
+                {error ? (
+                  <Alert severity="error">
+                    <AlertTitle>Erro</AlertTitle>
+                    {error}
+                  </Alert>
+                ) : null}
             
                 <TextField
                   margin="normal"

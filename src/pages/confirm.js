@@ -11,7 +11,7 @@ import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import Logo from './logo.png'
+import Logo from '../logo.png'
 
 const theme = createTheme();
 const delay = ms => new Promise(
