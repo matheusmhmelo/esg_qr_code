@@ -66,7 +66,7 @@ export default function SignIn() {
               alignItems: 'center',
             }}
           >
-              <img src={Logo} style={{ height: '35%', width: '35%'}}/>
+              <img src={Logo} alt="logo" style={{ height: '35%', width: '35%'}}/>
               <Typography component="h1" variant="h5">
                 Por dentro da ESG
               </Typography>
