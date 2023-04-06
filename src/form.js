@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -11,14 +12,53 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { QRCodeCanvas } from 'qrcode.react';
 import html2canvas from 'html2canvas';
+import { IMaskInput } from 'react-imask';
 
 import Logo from './logo.png'
 
 const theme = createTheme();
 
+const PhoneMaskCustom = React.forwardRef(function TextMaskCustom(props, ref) {
+  const { onChange, ...other } = props;
+  return (
+    <IMaskInput
+      {...other}
+      mask="(00) 00000-0000"
+      inputRef={ref}
+      onAccept={(value) => onChange({ target: { name: props.name, value } })}
+      overwrite
+    />
+  );
+});
+
+PhoneMaskCustom.propTypes = {
+  name: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
+
+const CPFMaskCustom = React.forwardRef(function TextMaskCustom(props, ref) {
+  const { onChange, ...other } = props;
+  return (
+    <IMaskInput
+      {...other}
+      mask="000.000.000-00"
+      inputRef={ref}
+      onAccept={(value) => onChange({ target: { name: props.name, value } })}
+      overwrite
+    />
+  );
+});
+
+CPFMaskCustom.propTypes = {
+  name: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
+
 export default function SignIn() {
   const printRef = React.useRef();
   const [qrCode, setQrCode] = useState(null)
+  const [phone, setPhone] = useState('');
+  const [cpf, setCpf] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -43,7 +83,7 @@ export default function SignIn() {
 
     if (typeof link.download === 'string') {
       link.href = data;
-      link.download = 'esg_qr_code.jpg';
+      link.download = 'esg_qr_code';
 
       document.body.appendChild(link);
       link.click();
@@ -111,6 +151,7 @@ export default function SignIn() {
                   id="email"
                   label="Endereço de e-mail"
                   name="email"
+                  type="email"
                 />
                 <TextField
                   margin="normal"
@@ -125,6 +166,11 @@ export default function SignIn() {
                   id="cpf"
                   label="CPF"
                   name="cpf"
+                  InputProps={{
+                    inputComponent: CPFMaskCustom,
+                  }}
+                  value={cpf}
+                  onChange={(event) => setCpf(event.target.value)}
                 />
                 <TextField
                   margin="normal"
@@ -132,6 +178,11 @@ export default function SignIn() {
                   id="phone"
                   label="Telefone"
                   name="phone"
+                  InputProps={{
+                    inputComponent: PhoneMaskCustom,
+                  }}
+                  value={phone}
+                  onChange={(event) => setPhone(event.target.value)}
                 />
                 <Button
                   type="submit"
