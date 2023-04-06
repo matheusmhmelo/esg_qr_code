@@ -13,6 +13,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import html2canvas from 'html2canvas';
 import { IMaskInput } from 'react-imask';
 import { v4 as uuidv4 } from 'uuid';
+import { useNavigate } from "react-router-dom";
 
 import QRCode from './qrCode'
 import Logo from './logo.png'
@@ -57,7 +58,9 @@ CPFMaskCustom.propTypes = {
 
 export default function SignIn() {
   const printRef = React.useRef();
-  const [qrCode, setQrCode] = useState(null)
+  const navigate = useNavigate();
+
+  const [qrCode, setQrCode] = useState(null);
   const [phone, setPhone] = useState('');
   const [cpf, setCpf] = useState('');
 
@@ -109,10 +112,10 @@ export default function SignIn() {
             ) : (
               <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
                 <Typography component="p" style={{ marginBottom: '20px' }}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel dui dui. 
-            Nulla ornare nec lacus eget tempus. Pellentesque nec quam venenatis, bibendum arcu eget, 
-            tincidunt turpis. Etiam vitae ultricies risus.
-            </Typography>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vel dui dui. 
+                Nulla ornare nec lacus eget tempus. Pellentesque nec quam venenatis, bibendum arcu eget, 
+                tincidunt turpis. Etiam vitae ultricies risus.
+                </Typography>
             
                 <TextField
                   margin="normal"
@@ -190,14 +193,24 @@ export default function SignIn() {
           </Box>
         </div>
         {qrCode ? (
-          <Button
-          fullWidth
-          variant="contained"
-          sx={{ mt: 3, mb: 2 }}
-          onClick={downloadPng}
-        >
-          Salvar QR Code
-        </Button>
+          <>
+            <Button
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              onClick={downloadPng}
+            >
+              Salvar QR Code
+            </Button>
+            <Button
+              fullWidth
+              variant="outlined"
+              sx={{ mb: 2 }}
+              onClick={() => navigate(0)}
+            >
+              Novo cadastro
+            </Button>
+        </>
         ) : null }
       </Container>
     </ThemeProvider>

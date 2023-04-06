@@ -9,6 +9,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import html2canvas from 'html2canvas';
 import { v4 as uuidv4 } from 'uuid';
+import { useNavigate } from "react-router-dom";
 
 import QRCode from './qrCode'
 import Logo from './logo.png'
@@ -17,6 +18,7 @@ const theme = createTheme();
 
 export default function Recover() {
   const printRef = React.useRef();
+  const navigate = useNavigate();
   const [qrCode, setQrCode] = useState(null)
 
   const handleSubmit = (event) => {
@@ -101,14 +103,24 @@ export default function Recover() {
           </Box>
         </div>
         {qrCode ? (
-          <Button
-          fullWidth
-          variant="contained"
-          sx={{ mt: 3, mb: 2 }}
-          onClick={downloadPng}
-        >
-          Salvar QR Code
-        </Button>
+          <>
+            <Button
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              onClick={downloadPng}
+            >
+              Salvar QR Code
+            </Button>
+            <Button
+              fullWidth
+              variant="outlined"
+              sx={{ mb: 2 }}
+              onClick={() => navigate("/")}
+            >
+              Novo cadastro
+            </Button>
+          </>
         ) : null }
       </Container>
     </ThemeProvider>

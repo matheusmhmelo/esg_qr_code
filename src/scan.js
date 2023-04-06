@@ -24,7 +24,7 @@ export default function Scan() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="m" style={{ marginBottom: '30px' }}>
+      <Container component="main" maxWidth="xs" style={{ marginBottom: '30px' }}>
         <CssBaseline />
         <Box
           sx={{

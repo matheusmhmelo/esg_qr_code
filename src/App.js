@@ -1,10 +1,12 @@
 import React from 'react';
-import { Route, BrowserRouter, Routes } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import { ProtectedRoute } from "./auth/protectedRoute";
 import Form from "./form";
 import Recover from "./recover";
 import Scan from "./scan";
 import Confirm from "./confirm";
+import Admin from "./admin";
 
 export default function App() {
   return(
@@ -12,8 +14,22 @@ export default function App() {
         <Routes>
             <Route element={<Form />}  path="/" exact />
             <Route element={<Recover />}  path="/recover" exact />
-            <Route element={<Scan />}  path="/scan" exact />
-            <Route element={<Confirm />}  path="/confirm/:value" />
+            
+            <Route element={
+              <ProtectedRoute isLogin>
+                <Admin />
+              </ProtectedRoute>
+            }  path="/admin" exact />
+            <Route element={
+              <ProtectedRoute>
+                <Scan />
+              </ProtectedRoute>
+            }  path="/scan" exact />
+            <Route element={
+              <ProtectedRoute>
+                <Confirm />
+              </ProtectedRoute>
+            }  path="/confirm/:value" />
         </Routes>
     </BrowserRouter>
   );
