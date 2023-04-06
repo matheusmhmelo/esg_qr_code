@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
@@ -8,6 +9,8 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "./auth/useLocalStorage";
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 import Logo from './logo.png'
 
@@ -16,6 +19,7 @@ const theme = createTheme();
 export default function Admin() {
   // eslint-disable-next-line no-unused-vars
   const [admin, setAdmin] = useLocalStorage(null);
+  const [error, setError] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
@@ -25,6 +29,8 @@ export default function Admin() {
     if(data.get('password') === process.env.REACT_APP_ADMIN_PASSWORD) {
       setAdmin(process.env.REACT_APP_ADMIN_TOKEN);
       navigate(0);
+    } else {
+      setError(true)
     }
   };
 
@@ -48,6 +54,12 @@ export default function Admin() {
                 Acesso à area de administração
               </Typography>
               <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                {error ? (
+                  <Alert severity="error">
+                    <AlertTitle>Erro</AlertTitle>
+                    Senha incorreta, por favor tente novamente!
+                  </Alert>
+                ) : null}
                 <TextField
                   margin="normal"
                   required
