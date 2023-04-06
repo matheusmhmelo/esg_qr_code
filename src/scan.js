@@ -40,6 +40,7 @@ export default function Scan() {
           </Typography>
             <div style={{width: '100%', height: '100%'}}>
               <QrReader
+                constraints={{ facingMode: 'environment' }}
                 delay={1000}
                 style={previewStyle}
                 onResult={(res, error)=>{
