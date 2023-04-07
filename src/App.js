@@ -7,6 +7,8 @@ import Recover from "./pages/recover";
 import Scan from "./pages/scan";
 import Confirm from "./pages/confirm";
 import Admin from "./pages/admin";
+import Panel from "./pages/panel";
+import Cadastros from "./pages/cadastros";
 
 export default function App() {
   return(
@@ -20,6 +22,16 @@ export default function App() {
                 <Admin />
               </ProtectedRoute>
             }  path="/admin" exact />
+            <Route element={
+              <ProtectedRoute>
+                <Panel />
+              </ProtectedRoute>
+            }  path="/admin-panel" exact />
+            <Route element={
+              <ProtectedRoute>
+                <Cadastros />
+              </ProtectedRoute>
+            }  path="/cadastros" exact />
             <Route element={
               <ProtectedRoute>
                 <Scan />

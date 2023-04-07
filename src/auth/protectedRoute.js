@@ -13,7 +13,7 @@ export const ProtectedRoute = ({ children, isLogin }) => {
     return <Navigate to="/" />;
   }  
   if (admin !== undefined && isAuthenticated && isLogin) {
-    return <Navigate to="/scan" />;
+    return <Navigate to="/admin-panel" />;
   }
   return children;
 };
