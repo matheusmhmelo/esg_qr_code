@@ -10,7 +10,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
 import { db } from '../firebase';
 import { format } from 'date-fns'
 
@@ -29,11 +29,25 @@ export default function Confirm() {
 
   async function confirmQRCode(value) {
     setLoading(true)
+    const date = format(new Date(), 'dd/MM/yyyy')
+
+    const q = query(
+      collection(db, "confirmados"),
+      where("qr_id", "==", value),
+      where("date", "==", date)
+    );
+    
+    const files = await getDocs(q);
+    if (files?.docs?.length > 0) {
+      setError("QR Code já registrado hoje, por favor tente novamente");
+      setLoading(false);
+      return;
+    }
     
     try {
       await addDoc(collection(db, "confirmados"), {
         qr_id: value,
-        date: format(new Date(), 'dd/MM/yyyy'),    
+        date: date,    
       });
       setSuccess(true)
     } catch (e) {
