@@ -27,12 +27,11 @@ export default function Recover() {
   const [qrCode, setQrCode] = useState(null)
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [email, setEmail] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-
-    getInfo(data)
+    getInfo(email)
   };
 
   const getInfo = async (data) => {
@@ -40,7 +39,7 @@ export default function Recover() {
 
     const q = query(
       collection(db, "cadastros"),
-      where("email", "==", data.get("email"))
+      where("email", "==", data)
     );
     
     const files = await getDocs(q);
@@ -117,6 +116,8 @@ export default function Recover() {
                   label="Endereço de e-mail"
                   name="email"
                   type="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
                 />
                 <Button
                   type="submit"

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom'
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -10,30 +10,45 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { collection, addDoc } from "firebase/firestore";
+import { db } from '../firebase';
+import { format } from 'date-fns'
 
 import Logo from '../logo.png'
 
 const theme = createTheme();
-const delay = ms => new Promise(
-  resolve => setTimeout(resolve, ms)
-);
 
 export default function Confirm() {
+  const confirmRef = useRef(false);
   const navigate = useNavigate();
   const { value } = useParams()
   
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
 
-  async function successFunction() {
-    await delay(1000);
+  async function confirmQRCode(value) {
+    setLoading(true)
+    
+    try {
+      await addDoc(collection(db, "confirmados"), {
+        qr_id: value,
+        date: format(new Date(), 'dd/MM/yyyy'),    
+      });
+      setSuccess(true)
+    } catch (e) {
+      setError("Ocorreu um erro ao validar o QR Code, por favor tente novamente!")
+    }
     setLoading(false)
-    setSuccess(true)
   }
 
   useEffect(() => {
-    setLoading(true)
-    successFunction()
+    if (confirmRef.current) return;
+    confirmRef.current = true;
+    if (value) {
+      confirmQRCode(value)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -66,6 +81,11 @@ export default function Confirm() {
                   <Alert severity="success">
                     <AlertTitle>Sucesso</AlertTitle>
                     QR Code registrado com sucesso -- <b>{value}</b>
+                  </Alert>
+                ) : error ? (
+                  <Alert severity="error">
+                    <AlertTitle>Erro</AlertTitle>
+                    {error}
                   </Alert>
                 ) : null}
                 <Button
