@@ -33,11 +33,11 @@ const theme = createTheme();
 const columns = [
   { id: 'name', label: 'Nome', minWidth: 170 },
   { id: 'email', label: 'E-mail', minWidth: 170 },
-  { id: 'inst_origem', label: 'Instituição de Origem', minWidth: 100 },
-  { id: 'cpf', label: 'CPF', minWidth: 100 },
-  { id: 'phone', label: 'Telefone', minWidth: 100 },
+  { id: 'inst_origem', label: 'Instituição de Origem', minWidth: 170 },
+  { id: 'cpf', label: 'CPF', minWidth: 170 },
+  { id: 'phone', label: 'Telefone', minWidth: 170 },
   { id: 'qr_id', label: 'QR Code', minWidth: 170 },
-  { id: 'access', label: 'Acessos', minWidth: 100 },
+  { id: 'access', label: 'Acessos', minWidth: 170 },
 ];
 
 const csvHeaders = [
