@@ -23,6 +23,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import Grid from '@mui/material/Grid';
+import { CSVLink } from "react-csv";
 
 import Logo from '../logo.png'
 
@@ -35,10 +37,21 @@ const columns = [
   { id: 'cpf', label: 'CPF', minWidth: 100 },
   { id: 'phone', label: 'Telefone', minWidth: 100 },
   { id: 'qr_id', label: 'QR Code', minWidth: 170 },
+  { id: 'access', label: 'Acessos', minWidth: 100 },
 ];
 
-function createData(name, email, inst_origem, cpf, phone, qr_id) {
-  return { name, email, inst_origem, cpf, phone, qr_id };
+const csvHeaders = [
+  { key: 'name', label: 'Nome' },
+  { key: 'email', label: 'E-mail' },
+  { key: 'inst_origem', label: 'Instituição de Origem' },
+  { key: 'cpf', label: 'CPF' },
+  { key: 'phone', label: 'Telefone' },
+  { key: 'qr_id', label: 'QR Code' },
+  { key: 'access', label: 'Acessos' },
+];
+
+function createData(name, email, inst_origem, cpf, phone, qr_id, access) {
+  return { name, email, inst_origem, cpf, phone, qr_id, access };
 }
 
 export default function Cadastros() {
@@ -48,6 +61,7 @@ export default function Cadastros() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [data, setData] = useState([]);
+  const [dataConfirmed, setDataConfirmed] = useState({});
   const [rows, setRows] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -75,6 +89,25 @@ export default function Cadastros() {
       return;
     }
     setData(files.docs)
+
+    const qc = query(
+      collection(db, "confirmados"),
+    );
+    
+    let confirmed = {}
+    const filesConf = await getDocs(qc);
+    if (filesConf?.docs?.length > 0) {
+      filesConf.docs.forEach((conf) => {
+        if (confirmed[conf.get('qr_id')]) {
+          confirmed[conf.get('qr_id')].push(conf.get('date'))
+        } else {
+          confirmed[conf.get('qr_id')] = [conf.get('date')]
+        }
+      })
+
+      setDataConfirmed(confirmed);
+    }
+
     setLoading(false)
   }
 
@@ -88,9 +121,28 @@ export default function Cadastros() {
   useEffect(() => {
     let storedData = []
     data.forEach((cad) => {
-      if (search !== "" && filter !== "" && !cad.get(filter).includes(search)) {
+      if (
+        search !== "" && 
+        filter !== "" && 
+        filter !== "confirmed" && 
+        !cad.get(filter).includes(search)
+      ) {
         return;
       }
+
+      const confirmed = 
+        dataConfirmed[cad.get("qr_id")]
+        ? dataConfirmed[cad.get("qr_id")].join(", ")
+        : "";
+
+      if (
+        search !== "" && 
+        filter === "confirmed" && 
+        !confirmed.includes(search)
+      ) {
+        return;
+      } 
+
       storedData.push(createData(
         cad.get("name"),
         cad.get("email"),
@@ -98,10 +150,11 @@ export default function Cadastros() {
         cad.get("cpf"),
         cad.get("phone"),
         cad.get("qr_id"),
+        confirmed
       ))
     })
     setRows(storedData)
-  }, [data, search, filter])
+  }, [data, dataConfirmed, search, filter])
 
   return (
     <ThemeProvider theme={theme}>
@@ -150,6 +203,7 @@ export default function Cadastros() {
                 <MenuItem value={'inst_origem'}>Instituição de Origem</MenuItem>
                 <MenuItem value={'cpf'}>CPF</MenuItem>
                 <MenuItem value={'phone'}>Telefone</MenuItem>
+                <MenuItem value={'confirmed'}>Data de Acesso</MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -222,6 +276,21 @@ export default function Cadastros() {
                   onRowsPerPageChange={handleChangeRowsPerPage}
                 />
               </Paper>
+              <Grid container sx={{ mt: 3 }}>
+                <Grid item>
+                  <CSVLink 
+                    data={rows} 
+                    headers={csvHeaders}
+                    filename={
+                      search !== "" ? 
+                      "cadastros-"+search+".csv" : 
+                      "cadastros.csv"
+                    }
+                  >
+                    Exportar dados (.csv)
+                  </CSVLink>
+                </Grid>
+              </Grid>
             </>
           )}
         </Box>
