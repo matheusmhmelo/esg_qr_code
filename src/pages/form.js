@@ -184,13 +184,7 @@ export default function SignIn() {
                 />
                 <TextField
                   margin="normal"
-                  fullWidth
-                  id="inst_origem"
-                  label="Instituição de Origem"
-                  name="inst_origem"
-                />
-                <TextField
-                  margin="normal"
+                  required
                   fullWidth
                   id="cpf"
                   label="CPF"
@@ -200,6 +194,13 @@ export default function SignIn() {
                   }}
                   value={cpf}
                   onChange={(event) => setCpf(event.target.value)}
+                />
+                <TextField
+                  margin="normal"
+                  fullWidth
+                  id="inst_origem"
+                  label="Instituição de Origem"
+                  name="inst_origem"
                 />
                 <TextField
                   margin="normal"
