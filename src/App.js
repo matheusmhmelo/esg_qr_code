@@ -9,6 +9,7 @@ import Confirm from "./pages/confirm";
 import Admin from "./pages/admin";
 import Panel from "./pages/panel";
 import Cadastros from "./pages/cadastros";
+import Certificate from "./pages/certificate";
 
 export default function App() {
   return(
@@ -42,6 +43,11 @@ export default function App() {
                 <Confirm />
               </ProtectedRoute>
             }  path="/confirm/:value" />
+            <Route element={
+              <ProtectedRoute>
+                <Certificate />
+              </ProtectedRoute>
+            }  path="/certificate" />
         </Routes>
     </BrowserRouter>
   );
