@@ -96,10 +96,12 @@ export default function Recover() {
             ) : (
               <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
                 <Typography component="p" style={{ marginBottom: '20px', textAlign: 'justify' }}>
-                O “Por dentro da ESG” é um evento voltado as empresas, microempresas e alunos de graduação que tem como intuito o aprofundamento e conscientização do universo ESG. Serão 3 dias de palestras, workshop e muito mais que trarão todo o suporte para imersão no tema. 
-Serão disponibilizados certificados às pessoas que fizerem o cadastro e apresentarem o QR code gerado, no dia do evento. 
-O Evento é totalmente gratuito promovido pelos alunos da disciplina de “Gestão Ambiental e Normatização” do Bacharel em Química da Unesp Bauru.
-            </Typography>
+                  O “Por dentro da ESG” é um evento voltado às empresas, microempresas e alunos de graduação que tem como intuito o aprofundamento e conscientização do universo ESG. São 3 dias de palestras, workshop e muito mais que trarão todo o suporte para imersão no tema. 
+                  <br />
+                  Serão disponibilizados certificados às pessoas que fizerem o cadastro. Apresente o QR code gerado, no dia do evento. 
+                  <br />
+                  O Evento é totalmente gratuito promovido pelos alunos da disciplina de “Gestão Ambiental e Normatização” do Bacharel em Química da Unesp Bauru.
+                </Typography>
 
                 {error ? (
                   <Alert severity="error">
