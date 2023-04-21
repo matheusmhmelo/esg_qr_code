@@ -66,6 +66,9 @@ export default function SignIn() {
   const navigate = useNavigate();
 
   const [qrCode, setQrCode] = useState(null);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [instOrigem, setInstOrigem] = useState('');
   const [phone, setPhone] = useState('');
   const [cpf, setCpf] = useState('');
   const [loading, setLoading] = useState(false);
@@ -174,6 +177,8 @@ export default function SignIn() {
                   name="name"
                   label="Nome Completo"
                   id="name"
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
                 />
                 <TextField
                   margin="normal"
@@ -183,6 +188,8 @@ export default function SignIn() {
                   label="Endereço de e-mail"
                   name="email"
                   type="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
                 />
                 <TextField
                   margin="normal"
@@ -203,6 +210,8 @@ export default function SignIn() {
                   id="inst_origem"
                   label="Instituição de Origem"
                   name="inst_origem"
+                  value={instOrigem}
+                  onChange={(event) => setInstOrigem(event.target.value)}
                 />
                 <TextField
                   margin="normal"
