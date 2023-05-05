@@ -4,6 +4,9 @@ import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
+import Checkbox from '@mui/material/Checkbox';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -71,6 +74,7 @@ export default function SignIn() {
   const [instOrigem, setInstOrigem] = useState('');
   const [phone, setPhone] = useState('');
   const [cpf, setCpf] = useState('');
+  const [share, setShare] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -104,7 +108,8 @@ export default function SignIn() {
         email: data.get("email"),    
         inst_origem: data.get("inst_origem"),    
         cpf: data.get("cpf"),    
-        phone: data.get("phone"),    
+        phone: data.get("phone"), 
+        share: share,   
       });
       setQrCode(qr_id)
     } catch (e) {
@@ -225,6 +230,18 @@ export default function SignIn() {
                   value={phone}
                   onChange={(event) => setPhone(event.target.value)}
                 />
+                <FormGroup sx={{ mt: 3 }}>
+                  <FormControlLabel control={
+                    <Checkbox checked={share} onChange={(event) => setShare(event.target.checked)} />
+                  }
+                  label={
+                    <Typography component="p" style={{ textAlign: 'justify' }}>
+                      Eu autorizo a comissão organizadora a 
+                      compartilhar meus dados de inscrição com o Sebrae unicamente 
+                      para emissão de certificado.
+                    </Typography>
+                  } />
+                </FormGroup>
                 <Button
                   type="submit"
                   fullWidth

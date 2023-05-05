@@ -24,6 +24,10 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Grid from '@mui/material/Grid';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormLabel from '@mui/material/FormLabel';
 import { CSVLink } from "react-csv";
 
 import Logo from '../logo.png'
@@ -37,6 +41,7 @@ const columns = [
   { id: 'cpf', label: 'CPF', minWidth: 170 },
   { id: 'phone', label: 'Telefone', minWidth: 170 },
   { id: 'qr_id', label: 'QR Code', minWidth: 170 },
+  { id: 'share', label: 'Compartilhar Dados', minWidth: 170 },
   { id: 'access', label: 'Acessos', minWidth: 170 },
 ];
 
@@ -47,11 +52,12 @@ const csvHeaders = [
   { key: 'cpf', label: 'CPF' },
   { key: 'phone', label: 'Telefone' },
   { key: 'qr_id', label: 'QR Code' },
+  { key: 'share', label: 'Compartilhar Dados' },
   { key: 'access', label: 'Acessos' },
 ];
 
-function createData(name, email, inst_origem, cpf, phone, qr_id, access) {
-  return { name, email, inst_origem, cpf, phone, qr_id, access };
+function createData(name, email, inst_origem, cpf, phone, qr_id, share, access) {
+  return { name, email, inst_origem, cpf, phone, qr_id, share, access };
 }
 
 export default function Cadastros() {
@@ -125,8 +131,19 @@ export default function Cadastros() {
         search !== "" && 
         filter !== "" && 
         filter !== "confirmed" && 
+        filter !== "share" && 
         !cad.get(filter).includes(search)
       ) {
+        return;
+      }
+
+      if (
+        search !== "" && 
+        (search === "Sim" || search === "Não") && 
+        filter !== "" && 
+        filter !== "shared"
+      ) {
+        if ((search === "Sim" && !cad.get(filter)) || (search === "Não" && cad.get(filter)))
         return;
       }
 
@@ -150,6 +167,7 @@ export default function Cadastros() {
         cad.get("cpf"),
         cad.get("phone"),
         cad.get("qr_id"),
+        cad.get("share") ? "Sim" : "Não",
         confirmed
       ))
     })
@@ -179,18 +197,8 @@ export default function Cadastros() {
               alignItems: 'center',
             }}
           >
-            <FormControl fullWidth>
-              <TextField
-                margin="normal"
-                fullWidth
-                name="filter"
-                label="Buscar cadastro"
-                id="filter"
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </FormControl>
-            <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Filtrar</InputLabel>
+            <FormControl fullWidth sx={{ mt: 3 }}>
+              <InputLabel id="demo-simple-select-label">Filtrar</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
@@ -203,9 +211,35 @@ export default function Cadastros() {
                 <MenuItem value={'inst_origem'}>Instituição de Origem</MenuItem>
                 <MenuItem value={'cpf'}>CPF</MenuItem>
                 <MenuItem value={'phone'}>Telefone</MenuItem>
+                <MenuItem value={'share'}>Compartilhar Dados</MenuItem>
                 <MenuItem value={'confirmed'}>Data de Acesso</MenuItem>
               </Select>
             </FormControl>
+            
+            { filter === "share" ? (
+              <FormControl component="fieldset" sx={{ mt: 3 }}>
+                <FormLabel component="legend">Buscar cadastro</FormLabel>
+                <RadioGroup 
+                  defaultValue="Sim" 
+                  aria-label="share" 
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}>
+                  <FormControlLabel value="Sim" control={<Radio />} label="Sim" />
+                  <FormControlLabel value="Não" control={<Radio />} label="Não" />
+                </RadioGroup>
+              </FormControl>
+            ) : (
+              <FormControl fullWidth sx={{ mt: 1 }}>
+                <TextField
+                  margin="normal"
+                  fullWidth
+                  name="filter"
+                  label="Buscar cadastro"
+                  id="filter"
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </FormControl>
+            )}
           </Box>
         </Box>
       </Container>
