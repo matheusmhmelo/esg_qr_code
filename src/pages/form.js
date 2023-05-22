@@ -64,6 +64,24 @@ CPFMaskCustom.propTypes = {
   onChange: PropTypes.func.isRequired,
 };
 
+const BirthMaskCustom = React.forwardRef(function TextMaskCustom(props, ref) {
+  const { onChange, ...other } = props;
+  return (
+    <IMaskInput
+      {...other}
+      mask="00/00/0000"
+      inputRef={ref}
+      onAccept={(value) => onChange({ target: { name: props.name, value } })}
+      overwrite
+    />
+  );
+});
+
+BirthMaskCustom.propTypes = {
+  name: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
+
 export default function SignIn() {
   const printRef = React.useRef();
   const navigate = useNavigate();
@@ -74,6 +92,7 @@ export default function SignIn() {
   const [instOrigem, setInstOrigem] = useState('');
   const [phone, setPhone] = useState('');
   const [cpf, setCpf] = useState('');
+  const [birth, setBirth] = useState('');
   const [share, setShare] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -109,7 +128,8 @@ export default function SignIn() {
         inst_origem: data.get("inst_origem"),    
         cpf: data.get("cpf"),    
         phone: data.get("phone"), 
-        share: share,   
+        share: share,  
+        birth: data.get("birth") 
       });
       setQrCode(qr_id)
     } catch (e) {
@@ -229,6 +249,20 @@ export default function SignIn() {
                   }}
                   value={phone}
                   onChange={(event) => setPhone(event.target.value)}
+                />
+                <TextField
+                  margin="normal"
+                  fullWidth
+                  id="birth"
+                  label="Data de Nascimento"
+                  helperText="DD/MM/YYYY"
+                  name="birth"
+                  required
+                  InputProps={{
+                    inputComponent: BirthMaskCustom,
+                  }}
+                  value={birth}
+                  onChange={(event) => setBirth(event.target.value)}
                 />
                 <FormGroup sx={{ mt: 3 }}>
                   <FormControlLabel control={

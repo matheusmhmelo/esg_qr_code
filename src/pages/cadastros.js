@@ -40,6 +40,7 @@ const columns = [
   { id: 'inst_origem', label: 'Instituição de Origem', minWidth: 170 },
   { id: 'cpf', label: 'CPF', minWidth: 170 },
   { id: 'phone', label: 'Telefone', minWidth: 170 },
+  { id: 'birth', label: 'Data de Nascimento', minWidth: 170 },
   { id: 'qr_id', label: 'QR Code', minWidth: 170 },
   { id: 'share', label: 'Compartilhar Dados', minWidth: 170 },
   { id: 'access', label: 'Acessos', minWidth: 170 },
@@ -51,13 +52,14 @@ const csvHeaders = [
   { key: 'inst_origem', label: 'Instituição de Origem' },
   { key: 'cpf', label: 'CPF' },
   { key: 'phone', label: 'Telefone' },
+  { key: 'birth', label: 'Data de Nascimento' },
   { key: 'qr_id', label: 'QR Code' },
   { key: 'share', label: 'Compartilhar Dados' },
   { key: 'access', label: 'Acessos' },
 ];
 
-function createData(name, email, inst_origem, cpf, phone, qr_id, share, access) {
-  return { name, email, inst_origem, cpf, phone, qr_id, share, access };
+function createData(name, email, inst_origem, cpf, phone, birth, qr_id, share, access) {
+  return { name, email, inst_origem, cpf, phone, birth, qr_id, share, access };
 }
 
 export default function Cadastros() {
@@ -166,6 +168,7 @@ export default function Cadastros() {
         cad.get("inst_origem"),
         cad.get("cpf"),
         cad.get("phone"),
+        cad.get("birth"),
         cad.get("qr_id"),
         cad.get("share") ? "Sim" : "Não",
         confirmed
@@ -211,6 +214,7 @@ export default function Cadastros() {
                 <MenuItem value={'inst_origem'}>Instituição de Origem</MenuItem>
                 <MenuItem value={'cpf'}>CPF</MenuItem>
                 <MenuItem value={'phone'}>Telefone</MenuItem>
+                <MenuItem value={'birth'}>Data de Nascimento</MenuItem>
                 <MenuItem value={'share'}>Compartilhar Dados</MenuItem>
                 <MenuItem value={'confirmed'}>Data de Acesso</MenuItem>
               </Select>
