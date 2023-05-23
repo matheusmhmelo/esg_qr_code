@@ -233,7 +233,7 @@ export default function SignIn() {
                   margin="normal"
                   fullWidth
                   id="inst_origem"
-                  label="Instituição de Origem"
+                  label="Instituição/Empresa de Origem"
                   name="inst_origem"
                   value={instOrigem}
                   onChange={(event) => setInstOrigem(event.target.value)}
