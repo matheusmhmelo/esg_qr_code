@@ -134,7 +134,7 @@ export default function Cadastros() {
         filter !== "" && 
         filter !== "confirmed" && 
         filter !== "share" && 
-        !cad.get(filter).includes(search)
+        !cad.get(filter)?.includes(search)
       ) {
         return;
       }
